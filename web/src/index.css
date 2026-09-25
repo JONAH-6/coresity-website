@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/**
+ * START --- SETUP TAILWINDCSS EDIT
+ *
+ * `yarn rw setup ui tailwindcss` placed these directives here
+ * to inject Tailwind's styles into your CSS.
+ * For more information, see: https://tailwindcss.com/docs/installation
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/**
+ * END --- SETUP TAILWINDCSS EDIT
+ */
+
+/* ------------------------------------------------------------------------
+   Coresity design-system tokens.
+   Source: the design system attached to the Claude Design project
+   (tokens/fonts.css, colors.css, typography.css, spacing.css, effects.css),
+   merged verbatim. Use the aliases in UI, not the raw scales.
+   ------------------------------------------------------------------------ */
+:root {
+  /* Core violet — brand primary */
+  --violet-950: #2e1065;
+  --violet-900: #4c1d95;
+  --violet-800: #5b21b6;
+  --violet-700: #6d28d9;
+  --violet-600: #7c3aed;
+  --violet-500: #8b5cf6;
+  --violet-400: #a78bfa;
+  --violet-300: #c4b5fd;
+  --violet-200: #ddd6fe;
+  --violet-100: #ede9fe;
+  --violet-50: #f5f3ff;
+
+  /* Spark amber — energy accent */
+  --amber-700: #b45309;
+  --amber-600: #d97706;
+  --amber-500: #f59e0b;
+  --amber-400: #fbbf24;
+  --amber-300: #fcd34d;
+  --amber-100: #fef3c7;
+  --amber-50: #fffbeb;
+
+  /* Ink — violet-tinted neutrals */
+  --ink-950: #131022;
+  --ink-900: #1d1930;
+  --ink-800: #2b2640;
+  --ink-700: #413b58;
+  --ink-600: #575170;
+  --ink-500: #6e6883;
+  --ink-400: #8d87a1;
+  --ink-300: #b6b1c6;
+  --ink-200: #d8d4e3;
+  --ink-100: #eae8f1;
+  --ink-50: #f6f5fa;
+  --white: #ffffff;
+
+  /* Semantic status */
+  --success-600: #0e8a5f;
+  --success-100: #d6f2e6;
+  --warning-600: #b45309;
+  --warning-100: #fdedd3;
+  --error-600: #dc2626;
+  --error-100: #fde2e2;
+  --info-600: #2563eb;
+  --info-100: #deeafe;
+
+  /* Aliases — use these in UI */
+  --brand: var(--violet-900);
+  --brand-hover: var(--violet-800);
+  --brand-active: var(--violet-950);
+  --brand-soft: var(--violet-100);
+  --brand-soft-hover: var(--violet-200);
+  --accent: var(--amber-500);
+  --accent-hover: var(--amber-400);
+  --accent-text: var(--amber-700);
+  --surface-page: var(--white);
+  --surface-subtle: var(--ink-50);
+  --surface-card: var(--white);
+  --surface-inverse: var(--violet-950);
+  --surface-inverse-2: var(--ink-950);
+  --text-heading: var(--ink-950);
+  --text-body: var(--ink-700);
+  --text-muted: var(--ink-500);
+  --text-faint: var(--ink-400);
+  --text-inverse: var(--white);
+  --text-inverse-muted: var(--violet-300);
+  --link: var(--violet-700);
+  --link-hover: var(--violet-900);
+  --border-default: var(--ink-200);
+  --border-strong: var(--ink-300);
+  --border-subtle: var(--ink-100);
+  --focus-ring: var(--violet-500);
+
+  /* Type */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --text-xs: 12px;
+  --lh-xs: 16px;
+  --text-sm: 14px;
+  --lh-sm: 20px;
+  --text-base: 16px;
+  --lh-base: 26px;
+  --text-lg: 18px;
+  --lh-lg: 28px;
+  --text-xl: 20px;
+  --lh-xl: 30px;
+  --text-2xl: 24px;
+  --lh-2xl: 32px;
+  --text-3xl: 30px;
+  --lh-3xl: 38px;
+  --text-4xl: 38px;
+  --lh-4xl: 44px;
+  --text-5xl: 48px;
+  --lh-5xl: 54px;
+  --text-6xl: 64px;
+  --lh-6xl: 68px;
+  --tracking-display: -0.02em;
+  --tracking-caps: 0.08em;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Spacing */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+  --container-max: 1200px;
+  --container-pad: 24px;
+
+  /* Effects */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+  --shadow-xs: 0 1px 2px rgba(19, 16, 34, 0.06);
+  --shadow-sm: 0 1px 3px rgba(19, 16, 34, 0.08),
+    0 1px 2px rgba(19, 16, 34, 0.04);
+  --shadow-md: 0 4px 12px rgba(19, 16, 34, 0.08),
+    0 2px 4px rgba(19, 16, 34, 0.05);
+  --shadow-lg: 0 12px 32px rgba(19, 16, 34, 0.12),
+    0 4px 8px rgba(19, 16, 34, 0.06);
+  --shadow-focus: 0 0 0 3px rgba(139, 92, 246, 0.35);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+}
+
+/* Element defaults (typography.css) plus the story page's globals. */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-body);
+  font-size: var(--text-base);
+  line-height: var(--lh-base);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  color: var(--text-heading);
+  letter-spacing: var(--tracking-display);
+}
+
+code,
+pre,
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+a {
+  color: var(--brand);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--brand-hover);
+  text-decoration: underline;
+}
+
+::selection {
+  background: #f59e0b;
+  color: #131022;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
