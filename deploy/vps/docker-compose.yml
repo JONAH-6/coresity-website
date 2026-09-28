@@ -1,0 +1,89 @@
+# Coresity on a plain VPS: the web image behind Traefik, with automatic
+# Let's Encrypt certificates.
+#
+# On the server, in a directory holding this file and a .env made from
+# .env.example:
+#   docker compose pull && docker compose up -d
+#
+# Requirements: DNS A/AAAA record for DOMAIN pointing at the server, and
+# ports 80 and 443 open. Release a new version by changing WEB_IMAGE in .env
+# (build-push.sh prints the value) and running the command above again.
+#
+# Traefik uses its file provider only; the Docker socket is not mounted.
+
+services:
+  web:
+    image: ${WEB_IMAGE:?set WEB_IMAGE in .env}
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+  traefik:
+    image: traefik:v3.7.13@sha256:24841fe2de7304c149343d877d2923b4c8800a38ba015dea9174c23b20e344a0
+    command:
+      - --providers.file.filename=/etc/traefik/dynamic.yml
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL:?set ACME_EMAIL in .env}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - traefik-acme:/letsencrypt
+    configs:
+      - source: traefik-dynamic
+        target: /etc/traefik/dynamic.yml
+    depends_on:
+      web:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+configs:
+  traefik-dynamic:
+    content: |
+      http:
+        routers:
+          web:
+            rule: Host(`${DOMAIN:?set DOMAIN in .env}`)
+            entryPoints: [websecure]
+            service: web
+            middlewares: [hsts]
+            tls:
+              certResolver: letsencrypt
+        middlewares:
+          hsts:
+            headers:
+              stsSeconds: 31536000
+        services:
+          web:
+            loadBalancer:
+              servers:
+                - url: http://web:8080
+      tls:
+        options:
+          default:
+            minVersion: VersionTLS12
+
+volumes:
+  traefik-acme:

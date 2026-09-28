@@ -1,0 +1,96 @@
+# Coresity on SecretVM. Upload this file as the VM's docker-compose.yaml in the
+# SecretAI portal (https://secretai.scrtlabs.com). No .env is needed.
+# `scripts/docker/secretvm.sh show` prints this file with the portal steps.
+#
+# Images are pinned by tag and digest, as the SecretVM docs recommend, so the
+# attested compose file names exactly what runs. The web line is rewritten by
+# scripts/docker/release-secretvm.sh; do not edit it by hand.
+#
+# Domain (coresity.com), per the SecretVM docs:
+#   - Set it as the Custom Domain in the portal before the first launch.
+#   - Add an A record pointing it at the VM's IP (Network tab).
+#   - Add the "CNAME Challenge" record shown in the VM logs; the certificate
+#     is issued once DNS has it.
+#   - The certificate covers that name only. www would reach the VM but fail
+#     TLS until a certificate covers it too.
+#
+# TLS: Traefik serves the certificate SecretVM places in /mnt/secure/cert (the
+# path used by the privexbot deployment; the SecretVM docs do not document
+# it). The route is catch-all, so it answers on whatever name reaches the VM.
+#
+# Traefik uses its file provider only; the Docker socket is not mounted.
+
+services:
+  web:
+    image: docker.io/privexlabs/coresity-web:0.0.0@sha256:0000000000000000000000000000000000000000000000000000000000000000 # pinned by scripts/docker/release-secretvm.sh
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+  traefik:
+    image: traefik:v3.7.13@sha256:24841fe2de7304c149343d877d2923b4c8800a38ba015dea9174c23b20e344a0
+    command:
+      - --providers.file.filename=/etc/traefik/dynamic.yml
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.websecure.address=:443
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - /mnt/secure/cert:/certs:ro
+    configs:
+      - source: traefik-dynamic
+        target: /etc/traefik/dynamic.yml
+    depends_on:
+      web:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+configs:
+  traefik-dynamic:
+    content: |
+      http:
+        routers:
+          web:
+            rule: PathPrefix(`/`)
+            entryPoints: [websecure]
+            service: web
+            middlewares: [hsts]
+            tls: {}
+        middlewares:
+          hsts:
+            headers:
+              stsSeconds: 31536000
+        services:
+          web:
+            loadBalancer:
+              servers:
+                - url: http://web:8080
+      tls:
+        options:
+          default:
+            minVersion: VersionTLS12
+        stores:
+          default:
+            defaultCertificate:
+              certFile: /certs/secret_vm_fullchain.pem
+              keyFile: /certs/secret_vm_private.pem

@@ -100,6 +100,8 @@ To make the integration even more seamless, Redwood augments Jest with database 
 
 ## Ship it
 
+Coresity ships as a Docker image (dev, VPS and SecretVM): see [scripts/docker/README.md](scripts/docker/README.md).
+
 Redwood is designed for both serverless deploy targets like Netlify and Vercel and serverful deploy targets like Render and AWS:
 
 ```

@@ -1,0 +1,30 @@
+# Local production-parity run: builds the same image that is shipped and runs
+# it with the same hardening as the deploy compose files.
+#
+#   ./scripts/docker/prod.sh up      (or: docker compose up -d --build --wait)
+#   open http://localhost:8910
+#
+# Port 8910 is Redwood's dev port, so `yarn test:e2e` runs against this
+# container unchanged (playwright.config.ts reuses an existing server).
+# Deployments use deploy/vps or deploy/secretvm instead.
+
+# Separate from docker-compose.dev.yml's project, so the two never replace
+# each other's containers.
+name: coresity-local
+
+services:
+  web:
+    image: ${WEB_IMAGE:-coresity-web:local}
+    build:
+      context: .
+      target: runtime
+    ports:
+      - '${WEB_PORT:-8910}:8080'
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped

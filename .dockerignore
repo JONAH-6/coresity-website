@@ -1,0 +1,37 @@
+# The Dockerfile copies only what it names, so this list mainly keeps the
+# build context small and keeps local secrets and host-built files out of it.
+
+# Dependencies and build output (host-built node_modules are macOS binaries)
+**/node_modules
+**/dist
+.redwood
+.yarn/install-state.gz
+
+# Local environment and secrets (.env.defaults is needed and stays in)
+**/.env
+.env.local
+**/*.db
+
+# Git, editors, tooling
+.git
+.gitignore
+.vscode
+.idea
+.editorconfig
+.claude
+.agents
+**/.DS_Store
+*.log
+
+# Tests and reports
+e2e
+playwright-report
+test-results
+
+# Docker and deployment files
+Dockerfile
+.dockerignore
+docker-compose*.yml
+deploy
+scripts
+docs

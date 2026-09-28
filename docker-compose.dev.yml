@@ -1,0 +1,32 @@
+# Development: the Redwood dev server (Vite, hot reload) in a Node 20
+# container, with the repo bind-mounted.
+#
+#   ./scripts/docker/dev.sh up
+#   open http://localhost:8910
+#
+# node_modules live in named volumes so the host's macOS-built packages never
+# shadow the Linux ones. After a dependency change run `dev.sh rebuild`.
+
+name: coresity-dev
+
+services:
+  web:
+    build:
+      context: .
+      target: deps
+    command: yarn rw dev web
+    ports:
+      - '8910:8910'
+    volumes:
+      - .:/home/node/app
+      - node_modules:/home/node/app/node_modules
+      - web_node_modules:/home/node/app/web/node_modules
+    environment:
+      - NODE_ENV=development
+      # redwood.toml has [browser] open = true; there is no browser in the
+      # container, and Vite skips opening one when BROWSER=none.
+      - BROWSER=none
+
+volumes:
+  node_modules:
+  web_node_modules:
