@@ -39,7 +39,16 @@ const PortfolioScene = () => (
             className={`relative overflow-hidden border border-[var(--ink-200)] bg-[var(--ink-100)] ${w.frameClass}`}
           >
             <div className="absolute -inset-[14px] transition-transform duration-500 ease-[cubic-bezier(.2,.7,.2,1)]">
-              <PlaceholderFrame />
+              {w.image ? (
+                <img
+                  src={w.image}
+                  alt={w.alt || w.t}
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <PlaceholderFrame />
+              )}
             </div>
           </div>
           <div className="mt-[18px] flex items-baseline justify-between font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--c-muted)]">

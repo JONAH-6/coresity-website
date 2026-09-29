@@ -18,6 +18,8 @@ export type Work = {
   kind: string
   t: string
   d: string
+  image: string
+  alt: string
   /** Stagger and frame height, as the design lays the three out. */
   offsetClass: string
   frameClass: string
@@ -28,8 +30,10 @@ export const WORK: Work[] = [
     id: 'work-1',
     n: 'Work 01',
     kind: 'Product',
-    t: 'Project name',
-    d: 'One line on the expert, the capability, and what it became.',
+    t: 'Investor-Ready Deck System',
+    d: "A fundraising specialist's expertise became a repeatable system for founders building investor-ready pitch decks.",
+    image: '/CORESITY-IMAGE/investor-deck.jpeg',
+    alt: 'Investor-Ready Deck System workbook and pitch deck on a desk',
     offsetClass: 'mt-0',
     frameClass: 'h-[440px]',
   },
@@ -37,8 +41,10 @@ export const WORK: Work[] = [
     id: 'work-2',
     n: 'Work 02',
     kind: 'Program',
-    t: 'Project name',
-    d: 'One line on the expert, the capability, and what it became.',
+    t: 'HR Boolean Search',
+    d: "A talent sourcer's search methodology became a focused training program for finding hard-to-reach candidates.",
+    image: '/CORESITY-IMAGE/boolean-search.jpeg',
+    alt: 'HR Boolean Search training session with sourcing team reviewing candidates',
     offsetClass: 'mt-[120px]',
     frameClass: 'h-[340px]',
   },
@@ -46,8 +52,10 @@ export const WORK: Work[] = [
     id: 'work-3',
     n: 'Work 03',
     kind: 'Business solution',
-    t: 'Project name',
-    d: 'One line on the expert, the capability, and what it became.',
+    t: 'ISO 45001 Certification Readiness',
+    d: "An ISO 45001 specialist's implementation expertise became a structured solution for organizations preparing for certification.",
+    image: '/CORESITY-IMAGE/iso45001.jpeg',
+    alt: 'ISO 45001 Certification Readiness review meeting inside an industrial facility',
     offsetClass: 'mt-12',
     frameClass: 'h-[400px]',
   },
